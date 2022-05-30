@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>SongJam - Room {{ room }}</title>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="//cdn.socket.io/4.4.1/socket.io.min.js"></script>
+        <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            var socket;
+            $(document).ready(function(){
+                socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
+                socket.on('connect', function() {
+                    socket.emit('joined', {});
+                });
+
+                socket.on('status', function(data) {
+                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg + '>\n');
+                    $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
+                });
+
+                socket.on('message', function(data) {
+                    $('#videos').append('<li>' + data.msg.split("*")[0] + '</li>');
+                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg.split("*")[0] + ' has been queued by ' + data.msg.split("*")[2] + '>\n');
+                    $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
+                    {#$('#videoPLayer').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1")#}
+                });
+
+                $('#text').keypress(function(e) {
+                   var code = e.keyCode || e.which;
+                   if (code == 13) {
+                       text = $('#text').val();
+                       $('#text').val('');
+                       socket.emit('queue', {msg: text});
+                   }});
+            });
+            function leave_room() {
+                socket.emit('left', {}, function() {
+                    socket.disconnect();
+
+                    // go back to the login page
+                    window.location.href = "{{ url_for('index') }}";
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Song Jam - Room: {{ room }}</h1>
+
+        <iframe id=videoPLayer src="" width="500" height="281" allowfullscreen></iframe>
+
+        <h4>Activity Log</h4>
+        <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>
+        <input id="text" size="80" placeholder="Queue your song here"><br><br>
+
+        <h4>Queue</h4>
+        <ul id="videos"></ul>
+        <a href="#" onclick="leave_room();">Leave this room</a>
+    </body>
+</html>
