@@ -11,6 +11,27 @@
              var firstScriptTag = document.getElementsByTagName('script')[0];
              firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+            var player;
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                playerVars: {'autoplay': 1},
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+                });
+            }
+
+            function onPlayerReady(event) {
+                event.target.playVideo();
+              }
+
+            function onPlayerStateChange(event) {
+                console.log(player.getCurrentTime());
+            }
             $(document).ready(function(){
                 socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
 
@@ -28,7 +49,8 @@
                     $('#videos').append('<li>' + data.msg.split(" has been")[0] + '</li>');
                     $('#activityLog').val($('#activityLog').val() + '<' + data.msg.split("*")[0] + '>\n');
                     $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
-                    $('iframe').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1' allow='autoplay'")
+                    player.loadVideoById({videoId: data.msg.split("*")[1]})
+                    // $('iframe').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1' allow='autoplay'")
                 });
 
                 $('#text').keypress(function(e) {
@@ -38,23 +60,6 @@
                        $('#text').val('');
                        socket.emit('queue', {msg: text});
                    }});
-
-                var player;
-                function onYouTubeIframeAPIReady(id) {
-                    player = new YT.Player('player', {
-                        height: '390',
-                        width: '640',
-                        videoId: id,
-                        playerVars: {
-                            'playsinline': 1
-                        },
-                        events: {
-                            'onReady': onPlayerReady,
-                            'onStateChange': onPlayerStateChange
-                      }
-                    });
-                }
-
             });
             function leave_room() {
                 socket.emit('left', {}, function() {
@@ -65,20 +70,6 @@
                 });
             }
 
-            function onPlayerReady(event) {
-                event.target.playVideo();
-              }
-
-            var done = false;
-            function onPlayerStateChange(event) {
-                if (event.data == YT.PlayerState.PLAYING && !done) {
-                    setTimeout(stopVideo, 6000);
-                    done = true;
-                }
-            }
-            function stopVideo() {
-                player.stopVideo();
-            }
 
         </script>
     </head>
@@ -86,8 +77,6 @@
         <h1>Song Jam - Room: {{ room }}</h1>
 
         <div id="player"></div>
-
-        <iframe id=videoPLayer src="" width="500" height="281" allowfullscreen></iframe>
         <div id="current">0:00</div>
         <div id="duration">0:00</div>
 
