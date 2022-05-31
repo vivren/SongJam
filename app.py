@@ -63,7 +63,7 @@ def song(message):
     playlist.addSong(newSong)
 
     room = session.get('room')
-    emit('message', {'msg': response["items"][0]["snippet"]["title"] + '*' + session.get('name')}, room=room)
+    emit('message', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name') + '*' + response["items"][0]["id"]["videoId"]}, room=room)
 
 
 @socketio.on('left', namespace='/chat')

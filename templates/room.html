@@ -6,6 +6,11 @@
         <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
         <script type="text/javascript" charset="utf-8">
             var socket;
+            var tag = document.createElement('script');
+             tag.src = "https://www.youtube.com/iframe_api";
+             var firstScriptTag = document.getElementsByTagName('script')[0];
+             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
             $(document).ready(function(){
                 socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
 
@@ -19,10 +24,11 @@
                 });
 
                 socket.on('message', function(data) {
-                    $('#videos').append('<li>' + data.msg.split("*")[0] + '</li>');
-                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg.split("*")[0] + ' has been queued by ' + data.msg.split("*")[2] + '>\n');
+                    // $("iframe").attr('src', url)
+                    $('#videos').append('<li>' + data.msg.split(" has been")[0] + '</li>');
+                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg.split("*")[0] + '>\n');
                     $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
-                    {#$('#videoPLayer').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1")#}
+                    $('iframe').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1' allow='autoplay'")
                 });
 
                 $('#text').keypress(function(e) {
@@ -32,6 +38,23 @@
                        $('#text').val('');
                        socket.emit('queue', {msg: text});
                    }});
+
+                var player;
+                function onYouTubeIframeAPIReady(id) {
+                    player = new YT.Player('player', {
+                        height: '390',
+                        width: '640',
+                        videoId: id,
+                        playerVars: {
+                            'playsinline': 1
+                        },
+                        events: {
+                            'onReady': onPlayerReady,
+                            'onStateChange': onPlayerStateChange
+                      }
+                    });
+                }
+
             });
             function leave_room() {
                 socket.emit('left', {}, function() {
@@ -41,12 +64,32 @@
                     window.location.href = "{{ url_for('index') }}";
                 });
             }
+
+            function onPlayerReady(event) {
+                event.target.playVideo();
+              }
+
+            var done = false;
+            function onPlayerStateChange(event) {
+                if (event.data == YT.PlayerState.PLAYING && !done) {
+                    setTimeout(stopVideo, 6000);
+                    done = true;
+                }
+            }
+            function stopVideo() {
+                player.stopVideo();
+            }
+
         </script>
     </head>
     <body>
         <h1>Song Jam - Room: {{ room }}</h1>
 
+        <div id="player"></div>
+
         <iframe id=videoPLayer src="" width="500" height="281" allowfullscreen></iframe>
+        <div id="current">0:00</div>
+        <div id="duration">0:00</div>
 
         <h4>Activity Log</h4>
         <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>
