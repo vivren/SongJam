@@ -17,7 +17,7 @@
                 height: '390',
                 width: '640',
                 videoId: 'M7lc1UVf-VE',
-                playerVars: {'autoplay': 1},
+                playerVars: {'autoplay': 1, 'controls': 0},
                 events: {
                     'onReady': onPlayerReady,
                     'onStateChange': onPlayerStateChange
@@ -27,16 +27,31 @@
 
             function onPlayerReady(event) {
                 event.target.playVideo();
-              }
-
-            function onPlayerStateChange(event) {
-                console.log(player.getCurrentTime());
             }
+
+            // var done = false;
+            function onPlayerStateChange(event) {
+                while (event.data === YT.PlayerState.PLAYING) {
+                    $('#current').text(player.getCurrentTime());
+                }
+            }
+
+
+            // function onPlayerStateChange(event) {
+            //     if (player.getCurrentTime() != 0):
+            //
+            //
+            //     $('#current').text(event.data)
+
+                // $('#current').text(player.getCurrentTime())
+
+
             $(document).ready(function(){
                 socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
 
                 socket.on('connect', function() {
                     socket.emit('joined', {});
+                       socket.emit('displayPlaylist');
                 });
 
                 socket.on('status', function(data) {
@@ -44,12 +59,15 @@
                     $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
                 });
 
-                socket.on('message', function(data) {
-                    // $("iframe").attr('src', url)
-                    $('#videos').append('<li>' + data.msg.split(" has been")[0] + '</li>');
-                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg.split("*")[0] + '>\n');
+                socket.on('playlist', function(data) {
+                    // $('#videos').append('<li>' + data.msg.split(" has been")[0] + '</li>');
+                     $('#videos').empty();
+                     for (let i=0; i<data.msg.length; i++){
+                         $('#videos').append('<li>' + data.msg[i] + '</li>');
+                     }
+                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg[data.msg.length - 1] + 'has been queued>\n');
                     $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
-                    player.loadVideoById({videoId: data.msg.split("*")[1]})
+                    // player.loadVideoById({videoId: data.msg.split("*")[1]})
                     // $('iframe').attr("src", "https://www.youtube.com/embed/" + data.msg.split("*")[1] + "?autoplay=1' allow='autoplay'")
                 });
 
@@ -58,7 +76,8 @@
                    if (code == 13) {
                        text = $('#text').val();
                        $('#text').val('');
-                       socket.emit('queue', {msg: text});
+                       socket.emit('addSong', {msg: text});
+                       socket.emit('displayPlaylist');
                    }});
             });
             function leave_room() {
@@ -70,7 +89,6 @@
                 });
             }
 
-
         </script>
     </head>
     <body>
@@ -78,7 +96,6 @@
 
         <div id="player"></div>
         <div id="current">0:00</div>
-        <div id="duration">0:00</div>
 
         <h4>Activity Log</h4>
         <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>

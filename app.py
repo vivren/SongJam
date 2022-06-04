@@ -47,7 +47,6 @@ def joined(message):
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
 
 
-
 @socketio.on('addSong', namespace='/chat')
 def song(message):
     youtube = build('youtube', 'v3', developerKey="AIzaSyBOXu8v48fZ5j_9SIGCkqZoO9pZ39PlwoU")
@@ -63,8 +62,14 @@ def song(message):
     newSong = Song(response["items"][0]["snippet"]["title"], response["items"][0]["id"]["videoId"])
     playlist.addSong(newSong)
 
+    # room = session.get('room')
+    # emit('playlist', {'msg': playlist.getPlaylist()}, room=room)
+    # emit('message', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name') + '*' + response["items"][0]["id"]["videoId"]}, room=room)
+
+@socketio.on('displayPlaylist', namespace='/chat')
+def displayPlaylist():
     room = session.get('room')
-    emit('message', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name') + '*' + response["items"][0]["id"]["videoId"]}, room=room)
+    emit('playlist', {'msg': playlist.getPlaylist()}, room=room)
 
 
 @socketio.on('left', namespace='/chat')
