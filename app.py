@@ -47,7 +47,8 @@ def joined(message):
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
 
 
-@socketio.on('queue', namespace='/chat')
+
+@socketio.on('addSong', namespace='/chat')
 def song(message):
     youtube = build('youtube', 'v3', developerKey="AIzaSyBOXu8v48fZ5j_9SIGCkqZoO9pZ39PlwoU")
 
