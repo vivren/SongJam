@@ -16,11 +16,9 @@
                 player = new YT.Player('player', {
                 height: '390',
                 width: '640',
-                videoId: 'M7lc1UVf-VE',
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
-                    'playsinline' : 1,
                     'origin': "https://www.youtube.com"},
                 events: {
                     'onReady': onPlayerReady,
@@ -33,27 +31,18 @@
                 event.target.playVideo();
             }
 
-            // var done = false;
             function onPlayerStateChange(event) {
-                while (event.data === YT.PlayerState.PLAYING) {
-                    $('#current').text(player.getCurrentTime());
-                }
+                    $('#test').text(player.getCurrentTime());
             }
-
-            // function onPlayerStateChange(event) {
-            //     if (player.getCurrentTime() != 0):
-            //
-            //
-            //     $('#current').text(event.data)
-
-                // $('#current').text(player.getCurrentTime())
-
 
             $(document).ready(function(){
                 socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
                 socket.on('connect', function() {
                     socket.emit('joined', {});
                     socket.emit('displayPlaylist');
+                    // socket.emit('displayVideo', {msg: player.getCurrentTime()})
+                    socket.emit('displayVideo');
                 });
 
                 socket.on('status', function(data) {
@@ -66,9 +55,11 @@
                      for (let i=0; i<data.msg.length; i++){
                          $('#videos').append('<li>' + data.msg[i].split(",")[0] + '</li>');
                      }
-                    $('#activityLog').val($('#activityLog').val() + '<' + data.msg[data.msg.length - 1].split(",")[0] + ' has been queued>\n');
-                    $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
-                    player.loadVideoById({videoId: data.msg[0].split(",")[1]})
+                });
+
+                socket.on('video', function(data) {
+                    // player.loadVideoById({videoId: data.video, startSeconds: data.time});
+                    player.loadVideoById({videoId: data.video});
                 });
 
                 $('#text').keypress(function(e) {
@@ -78,13 +69,12 @@
                        $('#text').val('');
                        socket.emit('addSong', {msg: text});
                        socket.emit('displayPlaylist');
+                       socket.emit('displayVideo')
                    }});
             });
             function leave_room() {
                 socket.emit('left', {}, function() {
                     socket.disconnect();
-
-                    // go back to the login page
                     window.location.href = "{{ url_for('index') }}";
                 });
             }
@@ -96,6 +86,8 @@
 
         <div id="player"></div>
         <div id="current">0:00</div>
+
+        <div id="test">TEST</div>
 
         <h4>Activity Log</h4>
         <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>

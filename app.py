@@ -12,8 +12,6 @@ app.config['SECRET_KEY'] = '1234'
 socketio.init_app(app)
 playlist = Playlist()
 
-# main = Blueprint('main', __name__)
-# app.register_blueprint(main)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -40,8 +38,6 @@ def listen():
 
 @socketio.on('joined', namespace='/chat')
 def joined(message):
-    """Sent by clients when they enter a room.
-    A status message is broadcast to all people in the room."""
     room = session.get('room')
     join_room(room)
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
@@ -62,9 +58,9 @@ def song(message):
     newSong = Song(response["items"][0]["snippet"]["title"], response["items"][0]["id"]["videoId"])
     playlist.addSong(newSong)
 
-    # room = session.get('room')
-    # emit('playlist', {'msg': playlist.getPlaylist()}, room=room)
-    # emit('message', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name') + '*' + response["items"][0]["id"]["videoId"]}, room=room)
+    room = session.get('room')
+    emit('status', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name')}, room=room)
+
 
 @socketio.on('displayPlaylist', namespace='/chat')
 def displayPlaylist():
@@ -72,10 +68,20 @@ def displayPlaylist():
     emit('playlist', {'msg': playlist.getPlaylist()}, room=room)
 
 
+@socketio.on('displayVideo', namespace='/chat')
+def displayVideo():
+    room = session.get('room')
+    if not playlist.isEmpty():
+        emit('video', {'video': playlist.getCurrentSong().getID()}, room=room)
+
+    # if message is None:
+    #     emit('video', {'time': 0}, {'video': playlist.getLastSong().getID()}, room=room)
+    # else:
+    #     emit('video', {'time': message}, {'video': playlist.getLastSong().getID()}, room=room)
+
+
 @socketio.on('left', namespace='/chat')
 def left(message):
-    """Sent by clients when they leave a room.
-    A status message is broadcast to all people in the room."""
     room = session.get('room')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
