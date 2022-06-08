@@ -72,7 +72,7 @@ def displayPlaylist():
 def displayVideo():
     room = session.get('room')
     if not playlist.isEmpty():
-        emit('video', {'video': playlist.getCurrentSong().getID()}, room=room)
+        emit('video', {'video': playlist.getCurrentSong().getID()}, room=request.sid)
 
     # if message is None:
     #     emit('video', {'time': 0}, {'video': playlist.getLastSong().getID()}, room=room)

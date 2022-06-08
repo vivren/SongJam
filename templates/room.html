@@ -6,39 +6,27 @@
         <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
         <script type="text/javascript" charset="utf-8">
             var socket;
-            var tag = document.createElement('script');
-             tag.src = "https://www.youtube.com/iframe_api";
-             var firstScriptTag = document.getElementsByTagName('script')[0];
-             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-            var player;
-            function onYouTubeIframeAPIReady() {
-                player = new YT.Player('player', {
-                height: '390',
-                width: '640',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0,
-                    'origin': "https://www.youtube.com"},
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-                });
-            }
-
-            function onPlayerReady(event) {
-                event.target.playVideo();
-            }
-
-            function onPlayerStateChange(event) {
-                    $('#test').text(player.getCurrentTime());
-            }
 
             $(document).ready(function(){
                 socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
 
-                socket.on('connect', function() {
+                var player;
+                var tag = document.createElement('script');
+                tag.src = "https://www.youtube.com/iframe_api";
+                var scriptTag = document.getElementsByTagName('script')[0];
+                scriptTag.parentNode.insertBefore(tag, scriptTag);
+
+                // function onYouTubeIframeAPIReady() {}
+
+                function onPlayerReady(event) {
+                    event.target.playVideo();
+                }
+
+                function onPlayerStateChange(event) {
+                    $('#test').text(player.getCurrentTime());
+                }
+
+                socket.on('connect', function(client) {
                     socket.emit('joined', {});
                     socket.emit('displayPlaylist');
                     // socket.emit('displayVideo', {msg: player.getCurrentTime()})
@@ -57,9 +45,28 @@
                      }
                 });
 
+                var first = true;
                 socket.on('video', function(data) {
+                    if (first) {
+                        first = false;
+
+                        player = new YT.Player('player', {
+                            height: '390',
+                            width: '640',
+                            videoId: data.video,
+                            playerVars: {
+                                'autoplay': 1,
+                                'controls': 0,
+                                'origin': "https://www.youtube.com"},
+                            events: {
+                                'onReady': onPlayerReady,
+                                'onStateChange': onPlayerStateChange
+                            }
+                        });
+                    } else {
                     // player.loadVideoById({videoId: data.video, startSeconds: data.time});
-                    player.loadVideoById({videoId: data.video});
+                        player.loadVideoById({videoId: data.video});
+                    }
                 });
 
                 $('#text').keypress(function(e) {
@@ -86,8 +93,6 @@
 
         <div id="player"></div>
         <div id="current">0:00</div>
-
-        <div id="test">TEST</div>
 
         <h4>Activity Log</h4>
         <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>
