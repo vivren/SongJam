@@ -23,3 +23,9 @@ div {
 .card text-white bg-dark mb-3 {
   text-align: center;
 }
+
+form {
+  display: inline-block;
+  text-align: center;
+  padding-top: 2rem;
+}
