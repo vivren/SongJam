@@ -1,7 +1,15 @@
 <html>
     <head>
-        <title>SongJam - Room {{ room }}</title>
+        <title>SongJam | Room {{ room }}</title>
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+            crossorigin="anonymous"></script>
         <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="//cdn.socket.io/4.4.1/socket.io.min.js"></script>
         <script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
@@ -52,8 +60,8 @@
                         first = false;
 
                         player = new YT.Player('player', {
-                            height: '390',
-                            width: '640',
+                            width: '100%',
+                            height: '100%',
                             videoId: data.video,
                             playerVars: {
                                 'autoplay': 1,
@@ -89,18 +97,29 @@
 
         </script>
     </head>
-    <body>
-        <h1>Song Jam - Room: {{ room }}</h1>
-
-        <div id="player"></div>
-        <div id="current">0:00</div>
-
-        <h4>Activity Log</h4>
-        <textarea id="activityLog" cols="80" rows="10"></textarea><br><br>
-        <input id="text" size="80" placeholder="Queue your song here"><br><br>
-
-        <h4>Queue</h4>
-        <ul id="videos"></ul>
-        <a href="#" onclick="leave_room();">Leave this room</a>
+    <body class="roomBody">
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+                    <h1 >Room {{ room }}</h1>
+                    <div id="player"></div>
+                </div>
+<!--                <div id="current">0:00</div>-->
+                <div class="col-4">
+                    <h4>Activity Log</h4>
+                    <textarea id="activityLog" class="form-control" cols="50" rows="20"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <input id="text" size=50% placeholder="Queue your song here"><br><br>
+                </div>
+                <div class="col-4">
+                    <h4>Queue</h4>
+                    <ul id="videos"></ul>
+                    <a href="#" onclick="leave_room();">Leave this room</a>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

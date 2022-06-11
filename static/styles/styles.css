@@ -1,16 +1,18 @@
-body {
+.roomBody {
   background-color: #3A0CA3;
   text-align: center;
 }
+
+.container {
+  background-color: #3A0CA3;
+  text-align: center;
+}
+
 h1 {
   color: #4CC9F0;
 }
 div {
   color: #baebff;
-}
-
-.indexGradient {
-  background: linear-gradient(to right, rgba(58, 13, 163, 1), rgba(76, 201, 240, 1))
 }
 
 .card text-white bg-dark mb-3 {
@@ -22,3 +24,8 @@ form {
   text-align: center;
   padding-top: 2rem;
 }
+
+textarea {
+  width: 100%;
+}
+
