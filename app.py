@@ -4,6 +4,7 @@ from forms import LoginForm
 from classes import Song, Playlist
 from apiclient.discovery import build
 import os
+import html
 
 socketio = SocketIO()
 app = Flask(__name__)
@@ -55,11 +56,11 @@ def song(message):
     )
 
     response = search.execute()
-    newSong = Song(response["items"][0]["snippet"]["title"], response["items"][0]["id"]["videoId"])
+    newSong = Song(html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
     playlist.addSong(newSong)
 
     room = session.get('room')
-    emit('status', {'msg': response["items"][0]["snippet"]["title"] + ' has been queued by ' + session.get('name')}, room=room)
+    emit('status', {'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')}, room=room)
 
 
 @socketio.on('displayPlaylist', namespace='/chat')
