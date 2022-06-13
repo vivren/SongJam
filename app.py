@@ -71,15 +71,25 @@ def displayPlaylist():
 
 @socketio.on('displayVideo', namespace='/chat')
 def displayVideo():
-    room = session.get('room')
+    # room = session.get('room')
     if not playlist.isEmpty():
-        emit('video', {'video': playlist.getCurrentSong().getID()}, room=request.sid)
+        emit('video', {'video': playlist.getCurrentSong().getID(), 'time': playlist.getCurrentSong().getTime()}, room=request.sid)
 
     # if message is None:
     #     emit('video', {'time': 0}, {'video': playlist.getLastSong().getID()}, room=room)
     # else:
     #     emit('video', {'time': message}, {'video': playlist.getLastSong().getID()}, room=room)
 
+@socketio.on('pause', namespace='/chat')
+def pause():
+    room = session.get('room')
+    emit('pauseVideo', room=room)
+
+@socketio.on('timeUpdate', namespace='chat')
+def timeUpdate(message):
+    if not playlist.isEmpty():
+        playlist.getCurrentSong().updateTime(message)
+        room = session.get('room')
 
 @socketio.on('left', namespace='/chat')
 def left(message):
