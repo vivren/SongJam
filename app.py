@@ -52,7 +52,7 @@ def song(message):
         part="snippet",
         maxResults=1,
         type="video",
-        q=message
+        q=message["song"]
     )
 
     response = search.execute()
@@ -85,11 +85,12 @@ def pause():
     room = session.get('room')
     emit('pauseVideo', room=room)
 
-@socketio.on('timeUpdate', namespace='chat')
+@socketio.on('timeUpdate', namespace='/chat')
 def timeUpdate(message):
     if not playlist.isEmpty():
-        playlist.getCurrentSong().updateTime(message)
+        playlist.getCurrentSong().updateTime(message["time"])
         room = session.get('room')
+        emit('status', {'msg': message["time"]}, room=room)
 
 @socketio.on('left', namespace='/chat')
 def left(message):
