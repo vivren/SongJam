@@ -33,11 +33,20 @@
 
                 function onPlayerStateChange(event) {
                     $('#current').text(player.getCurrentTime());
+                    playVideo()
                     socket.emit('timeUpdate', {time: player.getCurrentTime()});
+                }
+
+                function playVideo() {
+                    player.playVideo();
                 }
 
                 function pauseVideo() {
                     player.pauseVideo();
+                }
+
+                function seekTo() {
+                    player.seekTo(6, true);
                 }
 
                 socket.on('connect', function(client) {
@@ -45,6 +54,7 @@
                     socket.emit('displayPlaylist');
                     socket.emit('pause');
                     socket.emit('displayVideo');
+                    socket.emit('updateVideo');
                 });
 
                 socket.on('status', function(data) {
@@ -63,6 +73,10 @@
                     pauseVideo();
                 });
 
+                socket.on('updatedVideo', function() {
+                    seekTo();
+                });
+
                 var first = true;
                 socket.on('video', function(data) {
                     if (first) {
@@ -73,21 +87,23 @@
                             videoId: data.video,
                             playerVars: {
                                 'autoplay': 1,
+                                'mute': 1,
                                 'controls': 0,
                                 'origin': "https://www.youtube.com"},
                                 'rel': 0,
                                 'showinfo': 0,
+                            allow: 'autoplay',
                             events: {
                                 'onReady': onPlayerReady,
                                 'onStateChange': onPlayerStateChange
                             }
                         });
-                        player.seekTo(6);
                     } else {
                         // player.loadVideoById({videoId: data.video, startSeconds: data.time});
                     //     player.loadVideoById({videoId: data.video, startSeconds: 6.32});
                     }
                 });
+
 
                 $('#text').keypress(function(e) {
                    var code = e.keyCode || e.which;
