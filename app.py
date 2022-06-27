@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from forms import LoginForm
-from classes import Song, Playlist
+from classes import Playlist
 from apiclient.discovery import build
 import html
 
@@ -56,9 +56,9 @@ def song(message):
     )
 
     response = search.execute()
-    newSong = Song(html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
+    # newSong = Song(html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
     room = session.get('room')
-    playlist.addSong(room, str(newSong))
+    playlist.addSong(room, html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
     emit('status', {
         'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')},
          room=room)
@@ -100,7 +100,7 @@ def pause():
 def timeUpdate(message):
     room = session.get('room')
     if not playlist.isEmpty(room):
-        # playlist.getCurrentSong().updateTime(message["time"])
+        playlist.updateCurrentSongTime(room, message["time"])
         emit('updatedTime', {'time': message["time"]}, room=room)
 
 
