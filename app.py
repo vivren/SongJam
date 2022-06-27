@@ -67,13 +67,13 @@ def song(message):
 @socketio.on('displayPlaylist', namespace='/chat')
 def displayPlaylist():
     room = session.get('room')
-    emit('playlist', {'msg': playlist.getPlaylist(room)}, room=room)
+    emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
 
 @socketio.on('displayVideo', namespace='/chat')
 def displayVideo():
     room = session.get('room')
     if not playlist.isEmpty(room):
-        emit('video', {'video': playlist.getCurrentSong(room).decode().split(",")[1], 'time': playlist.getCurrentSong(room).decode().split(",")[1]},
+        emit('video', {'video': playlist.getCurrentSong(room).split(",")[1], 'time': playlist.getCurrentSong(room).split(",")[2]},
              room=request.sid)
 
     # if message is None:
