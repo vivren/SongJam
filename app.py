@@ -1,3 +1,4 @@
+#SERVER SIDE
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from forms import LoginForm
@@ -42,7 +43,8 @@ def joined(message):
     room = session.get('room')
     join_room(room)
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
-
+    emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
+    emit('update', room=room)
 
 @socketio.on('addSong', namespace='/chat')
 def song(message):
@@ -56,7 +58,6 @@ def song(message):
     )
 
     response = search.execute()
-    # newSong = Song(html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
     room = session.get('room')
     playlist.addSong(room, html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
     emit('status', {
@@ -73,13 +74,8 @@ def displayPlaylist():
 def displayVideo():
     room = session.get('room')
     if not playlist.isEmpty(room):
-        emit('video', {'video': playlist.getCurrentSong(room).split(",")[1], 'time': playlist.getCurrentSong(room).split(",")[2]},
-             room=request.sid)
-
-    # if message is None:
-    #     emit('video', {'time': 0}, {'video': playlist.getLastSong().getID()}, room=room)
-    # else:
-    #     emit('video', {'time': message}, {'video': playlist.getLastSong().getID()}, room=room)
+        # emit('video', {'video': playlist.getCurrentSong(room).split(",")[1], 'time': playlist.getCurrentSong(room).split(",")[2]}, room=room)
+        emit('video', {'video': playlist.getCurrentSong(room).split(",")[1]}, room=room)
 
 
 @socketio.on('pause', namespace='/chat')
@@ -93,7 +89,6 @@ def pause():
 #     if not playlist.isEmpty():
 #         playlist.getCurrentSong().updateTime(message["time"])
 #         room = session.get('room')
-#         emit('status', {'msg': message["time"]}, room=room)
 
 
 @socketio.on('timeUpdate', namespace='/chat')
@@ -101,7 +96,7 @@ def timeUpdate(message):
     room = session.get('room')
     if not playlist.isEmpty(room):
         playlist.updateCurrentSongTime(room, message["time"])
-        emit('updatedTime', {'time': message["time"]}, room=room)
+        emit('time', {'time': message["time"]}, room=room)
 
 
 @socketio.on('left', namespace='/chat')

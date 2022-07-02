@@ -1,3 +1,5 @@
+// CLEINT SIDE
+
 var socket;
     $(document).ready(function(){
         socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
@@ -8,14 +10,12 @@ var socket;
         var scriptTag = document.getElementsByTagName('script')[0];
         scriptTag.parentNode.insertBefore(tag, scriptTag);
 
-        // function onYouTubeIframeAPIReady() {}
 
         function onPlayerReady(event) {
             event.target.playVideo();
         }
 
         function onPlayerStateChange(event) {
-            // $('#current').text(player.getCurrentTime());
             playVideo()
             socket.emit('timeUpdate', {time: player.getCurrentTime()});
         }
@@ -24,15 +24,13 @@ var socket;
             player.playVideo();
         }
 
-        function pauseVideo() {
-            player.pauseVideo();
+        function update() {
+            socket.emit('timeUpdate', {time: player.getCurrentTime()});
         }
 
-        socket.on('connect', function(client) {
+        socket.on('connect', function() {
             socket.emit('joined', {});
-            socket.emit('displayPlaylist');
-            socket.emit('pause');
-            setTimeout(socket.emit('displayVideo'), 10000);
+            socket.emit('displayVideo');
         });
 
         socket.on('status', function(data) {
@@ -40,7 +38,7 @@ var socket;
             $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
         });
 
-        socket.on('updatedTime', function(data) {
+        socket.on('time', function(data) {
             $('#current').text($('#current').text() + ' ' + data.time + ' ');
         });
 
@@ -51,37 +49,35 @@ var socket;
              }
         });
 
-        socket.on('pauseVideo', function() {
-            pauseVideo();
+        socket.on('update', function() {
+            update();
         });
 
         var first = true;
         socket.on('video', function(data) {
             if (first) {
-                // first = false;
-                var currTime = $('#current').text().split(" ")[($('#current').text().split(" ").length)-1];
-                 $('#current').text(`Timeeeeeeeeeeeeeeeeee   ${currTime}`);
+                // var currTime = $('#current').text()
+                // currTime = currTime.split(" ");
+                // currTime = currTime.sort(function(a, b) {
+                //     return a - b;
+                // });
                 player = new YT.Player('player', {
                     width: '100%',
                     videoId: data.video,
                     playerVars: {
-                        'start': currTime,
+                        // 'start': Math.round(currTime[currTime.length-1]),
                         'autoplay': 1,
                         'mute': 1,
                         'controls': 0,
-                        'origin': "https://www.youtube.com"},
+                        'origin': "https://www.youtube.com",
                         'rel': 0,
-                        'showinfo': 0,
+                        'showinfo': 0},
                     allow: 'autoplay',
                     events: {
                         'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange
                     }
                 });
-                $('#current').val('');
-            } else {
-                // player.loadVideoById({videoId: data.video, startSeconds: data.time});
-            //     player.loadVideoById({videoId: data.video, startSeconds: 6.32});
             }
         });
 
