@@ -30,7 +30,6 @@ var socket;
 
         socket.on('connect', function() {
             socket.emit('joined', {});
-            socket.emit('displayVideo');
         });
 
         socket.on('status', function(data) {
@@ -39,7 +38,8 @@ var socket;
         });
 
         socket.on('time', function(data) {
-            $('#current').text($('#current').text() + ' ' + data.time + ' ');
+            $('#current').val($('#current').val() + ' ' + data.time + ' ');
+            $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
         });
 
         socket.on('playlist', function(data) {
@@ -56,16 +56,16 @@ var socket;
         var first = true;
         socket.on('video', function(data) {
             if (first) {
-                // var currTime = $('#current').text()
-                // currTime = currTime.split(" ");
-                // currTime = currTime.sort(function(a, b) {
-                //     return a - b;
-                // });
+                var currTime = $('#current').val()
+                currTime = currTime.split(" ");
+                currTime = currTime.sort(function(a, b) {
+                    return a - b;
+                });
                 player = new YT.Player('player', {
                     width: '100%',
                     videoId: data.video,
                     playerVars: {
-                        // 'start': Math.round(currTime[currTime.length-1]),
+                        'start': Math.round(currTime[currTime.length-1]),
                         'autoplay': 1,
                         'mute': 1,
                         'controls': 0,
@@ -78,6 +78,7 @@ var socket;
                         'onStateChange': onPlayerStateChange
                     }
                 });
+            $('#activityLog').val($('#activityLog').val() + '< player loaded >\n');
             }
         });
 
@@ -89,7 +90,14 @@ var socket;
                socket.emit('addSong', {song: text});
                socket.emit('displayPlaylist');
                socket.emit('displayVideo')
-           }});
+           }
+        });
+
+        $('#current').change(function() {
+            $('#activityLog').val($('#activityLog').val() + '< function called >\n');
+            socket.emit('displayVideo');
+        });
+
     });
     function leave_room() {
         socket.emit('left', {}, function() {
