@@ -17,7 +17,7 @@ var socket;
 
         function onPlayerStateChange(event) {
             playVideo()
-            socket.emit('timeUpdate', {time: player.getCurrentTime()});
+            //     socket.emit('timeUpdate', {time: player.getCurrentTime()});
         }
 
         function playVideo() {
@@ -38,9 +38,18 @@ var socket;
         });
 
         socket.on('time', function(data) {
-            $('#current').val($('#current').val() + ' ' + data.time + ' ');
+            // $('#current').val($('#current').val() + ' ' + data.time + ' ');
+            $('#current').append(`<option id="${data.time}" value="${data.time}">${data.time}</option>`);
+            $('#' + data.time).attr('selected', 'selected').parent().focus();
+            $("#3").parent().change();
             $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
         });
+
+        // function newOption() {
+        //     $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
+        //     $("#3").attr('selected', 'selected').parent().focus();
+        //     $("#3").parent().change();
+        // }
 
         socket.on('playlist', function(data) {
              $('#videos').empty();
@@ -52,6 +61,11 @@ var socket;
         socket.on('update', function() {
             update();
         });
+
+       // socket.on('newOption', function() {
+       //      $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
+       //      $('#current').val("0");
+       //  });
 
         var first = true;
         socket.on('video', function(data) {

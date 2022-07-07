@@ -5,6 +5,7 @@ from forms import LoginForm
 from classes import Playlist
 from apiclient.discovery import build
 import html
+import time
 
 socketio = SocketIO()
 app = Flask(__name__)
@@ -14,6 +15,7 @@ socketio.init_app(app)
 
 playlist = Playlist()
 
+users = 0
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -40,11 +42,17 @@ def listen():
 
 @socketio.on('joined', namespace='/chat')
 def joined(message):
+    global users
+    users += 1
     room = session.get('room')
     join_room(room)
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
     emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
-    emit('update', room=room)
+    if users > 1:
+        emit('update', room=room)
+        # time.sleep(1)
+        # emit('newOption', room=room)
+
 
 @socketio.on('addSong', namespace='/chat')
 def song(message):
