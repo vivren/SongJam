@@ -44,7 +44,6 @@ var socket;
             $('#' + Math.round(data.time)).attr('selected', 'selected').parent().focus();
 
             $('#' + Math.round(data.time)).parent().change();
-            $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
         });
 
         // function newOption() {
@@ -69,33 +68,29 @@ var socket;
        //      $('#current').val("0");
        //  });
 
-        var first = true;
         socket.on('video', function(data) {
-            if (first) {
-                var currTime = $('#current').val()
-                currTime = currTime.split(" ");
-                currTime = currTime.sort(function(a, b) {
-                    return a - b;
-                });
-                player = new YT.Player('player', {
-                    width: '100%',
-                    videoId: data.video,
-                    playerVars: {
-                        'start': Math.round(currTime[currTime.length-1]),
-                        'autoplay': 1,
-                        'mute': 1,
-                        'controls': 0,
-                        'origin': "https://www.youtube.com",
-                        'rel': 0,
-                        'showinfo': 0},
-                    allow: 'autoplay',
-                    events: {
-                        'onReady': onPlayerReady,
-                        'onStateChange': onPlayerStateChange
-                    }
-                });
-            $('#activityLog').val($('#activityLog').val() + '< player loaded >\n');
-            }
+            var currTime = $('#current').val()
+            currTime = currTime.split(" ");
+            currTime = currTime.sort(function(a, b) {
+                return a - b;
+            });
+            player = new YT.Player('player', {
+                width: '100%',
+                videoId: data.video,
+                playerVars: {
+                    'start': Math.round(currTime[currTime.length-1]),
+                    'autoplay': 1,
+                    'mute': 1,
+                    'controls': 0,
+                    'origin': "https://www.youtube.com",
+                    'rel': 0,
+                    'showinfo': 0},
+                allow: 'autoplay',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
         });
 
         $('#text').keypress(function(e) {
@@ -110,7 +105,6 @@ var socket;
         });
 
         $('#current').change(function() {
-            $('#activityLog').val($('#activityLog').val() + '< function called >\n');
             socket.emit('displayVideo');
         });
 

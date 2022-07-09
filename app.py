@@ -48,10 +48,8 @@ def joined(message):
     join_room(room)
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
     emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
-    if users > 1:
+    if users != 1:
         emit('update', room=room)
-        # time.sleep(1)
-        # emit('newOption', room=room)
 
 
 @socketio.on('addSong', namespace='/chat')
@@ -77,6 +75,7 @@ def song(message):
 def displayPlaylist():
     room = session.get('room')
     emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
+
 
 @socketio.on('displayVideo', namespace='/chat')
 def displayVideo():
