@@ -39,9 +39,11 @@ var socket;
 
         socket.on('time', function(data) {
             // $('#current').val($('#current').val() + ' ' + data.time + ' ');
-            $('#current').append(`<option id="${data.time}" value="${data.time}">${data.time}</option>`);
-            $('#' + data.time).attr('selected', 'selected').parent().focus();
-            $("#3").parent().change();
+            $('#current').append(`<option id="${Math.round(data.time)}" value="${data.time}">${data.time}</option>`);
+            // $('#' + data.time).attr('selected', 'selected').parent().focus();
+            $('#' + Math.round(data.time)).attr('selected', 'selected').parent().focus();
+
+            $('#' + Math.round(data.time)).parent().change();
             $('#activityLog').val($('#activityLog').val() + '< time updated >\n');
         });
 
