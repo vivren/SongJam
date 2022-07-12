@@ -45,8 +45,13 @@ var socket;
 
         socket.on('playlist', function(data) {
              $('#videos').empty();
-             for (let i=0; i<data.playlist.length; i++){
-                 $('#videos').append('<li>' + data.playlist[i].split(",")[0].toString() + '</li>');
+             if (data.playlist.length == 0) {
+                 $("#videos").append('<h5>Play a song using the search bar.</h5>');
+             } else {
+                 $("#videos").empty();
+                 for (let i=0; i<data.playlist.length; i++) {
+                     $('#videos').append('<li>' + data.playlist[i].split(",")[0].toString() + '</li>');
+                 }
              }
         });
 
