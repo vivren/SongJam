@@ -10,11 +10,7 @@ class Playlist:
         return self.playlist.llen(room) == 0
 
     def addSong(self, room, title, id):
-        song = title + ',' + id + ',0'
-        self.playlist.rpush(room, song)
-
-    def addSongWithTime(self, room, title, id, time):
-        song = title + ',' + id + time
+        song = title + ',' + id
         self.playlist.rpush(room, song)
 
     def getCurrentSong(self, room):
@@ -22,11 +18,12 @@ class Playlist:
             return None
         return self.playlist.lindex(room, 0)
 
-    def updateCurrentSongTime(self, room, time):
-        if self.isEmpty(room):
-            return None
-        new = self.playlist.lindex(room, 0).split(",")[0] + ',' + self.playlist.lindex(room, 0).split(",")[1] + ',' + str(time)
-        self.playlist.lset(room, 0, new)
+    # def updateCurrentSongTime(self, room, time):
+    #     if self.isEmpty(room):
+    #         return None
+    #     if float(self.playlist.lindex(room, 0).split(",")[2]) < time:
+    #         new = self.playlist.lindex(room, 0).split(",")[0] + ',' + self.playlist.lindex(room, 0).split(",")[1] + ',' + str(time)
+    #         self.playlist.lset(room, 0, new)
 
     def getNextSong(self, room):
         if self.isEmpty(room):

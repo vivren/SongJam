@@ -55,12 +55,12 @@ def joined(message):
 @socketio.on('addSong', namespace='/chat')
 def song(message):
     youtube = build('youtube', 'v3', developerKey="AIzaSyBOXu8v48fZ5j_9SIGCkqZoO9pZ39PlwoU")
-
     search = youtube.search().list(
         part="snippet",
         maxResults=1,
         type="video",
-        q=message["song"]
+        q=message["song"],
+        videoLicense="creativeCommon"
     )
 
     response = search.execute()
@@ -81,8 +81,8 @@ def displayPlaylist():
 def displayVideo():
     room = session.get('room')
     if not playlist.isEmpty(room):
-        # emit('video', {'video': playlist.getCurrentSong(room).split(",")[1], 'time': playlist.getCurrentSong(room).split(",")[2]}, room=room)
-        emit('video', {'video': playlist.getCurrentSong(room).split(",")[1]}, room=room)
+        print(playlist.getCurrentSong(room).split(",")[-1])
+        emit('video', {'video': playlist.getCurrentSong(room).split(",")[-1]}, room=room)
 
 
 @socketio.on('pause', namespace='/chat')
@@ -102,7 +102,6 @@ def pause():
 def timeUpdate(message):
     room = session.get('room')
     if not playlist.isEmpty(room):
-        playlist.updateCurrentSongTime(room, message["time"])
         emit('time', {'time': message["time"]}, room=room)
 
 
