@@ -65,10 +65,15 @@ def song(message):
 
     response = search.execute()
     room = session.get('room')
-    playlist.addSong(room, html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
-    emit('status', {
-        'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')},
-         room=room)
+
+    if len(response["items"]) == 0:
+        emit("searchResults", {"results": False, "search": message["song"]}, room=room)
+    else:
+        emit("searchResults", {"results": True}, room=room)
+        playlist.addSong(room, html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
+        emit('status', {
+            'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')},
+             room=room)
 
 
 @socketio.on('displayPlaylist', namespace='/chat')
@@ -81,7 +86,6 @@ def displayPlaylist():
 def displayVideo():
     room = session.get('room')
     if not playlist.isEmpty(room):
-        print(playlist.getCurrentSong(room).split(",")[-1])
         emit('video', {'video': playlist.getCurrentSong(room).split(",")[-1]}, room=room)
 
 

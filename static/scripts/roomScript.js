@@ -43,7 +43,6 @@ var socket;
             $('#' + Math.round(data.time)).parent().change();
         });
 
-
         socket.on('playlist', function(data) {
              $('#videos').empty();
              for (let i=0; i<data.playlist.length; i++){
@@ -51,11 +50,18 @@ var socket;
              }
         });
 
-
         socket.on('update', function() {
             update();
         });
 
+        socket.on("searchResults", function(data) {
+            if (data.results === false) {
+                $('#searchResults').append('<h3>No results for "' + data.search + '".</h3>')
+                $('#searchResults').append('<p>Check your spelling or try a different search term.</p>')
+            } else {
+                $('#searchResults').empty();
+            }
+        });
 
         socket.on('video', function(data) {
             var currTime = $('#current').val()
