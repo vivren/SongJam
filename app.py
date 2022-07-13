@@ -14,7 +14,6 @@ app.config['SECRET_KEY'] = '1234'
 socketio.init_app(app)
 
 playlist = Playlist()
-
 users = 0
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,7 +46,6 @@ def joined(message):
     room = session.get('room')
     join_room(room)
     emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
-    emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
     if users != 1:
         emit('update', room=room)
 
@@ -71,9 +69,7 @@ def song(message):
     else:
         emit("searchResults", {"results": True}, room=room)
         playlist.addSong(room, html.unescape(response["items"][0]["snippet"]["title"]), response["items"][0]["id"]["videoId"])
-        emit('status', {
-            'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')},
-             room=room)
+        emit('status', {'msg': html.unescape(response["items"][0]["snippet"]["title"]) + ' has been queued by ' + session.get('name')}, room=room)
 
 
 @socketio.on('displayPlaylist', namespace='/chat')
@@ -84,9 +80,20 @@ def displayPlaylist():
 
 @socketio.on('displayVideo', namespace='/chat')
 def displayVideo():
+
+    #sceneraios that would need a new vid to be played
+    #1. first joiner. upon queing the first song
+    #2. non first joiner, upon joining the room
+    #3. any joiner, upon song ending and songs in queue
+    #4. any joiner, song ended previously and song was just queued
+
+    #scenarious not requring
+    #1. any joiner, song queued but song already playing
+
     room = session.get('room')
     if not playlist.isEmpty(room):
         emit('video', {'video': playlist.getCurrentSong(room).split(",")[-1]}, room=room)
+        # emit('unmute', room=room)
 
 
 @socketio.on('pause', namespace='/chat')
@@ -95,11 +102,9 @@ def pause():
     emit('pauseVideo', room=room)
 
 
-# @socketio.on('timeUpdate', namespace='/chat')
-# def timeUpdate(message):
-#     if not playlist.isEmpty():
-#         playlist.getCurrentSong().updateTime(message["time"])
-#         room = session.get('room')
+@socketio.on('end', namespace='/chat')
+def stop():
+    playlist.getNextSong(session.get('room'))
 
 
 @socketio.on('timeUpdate', namespace='/chat')

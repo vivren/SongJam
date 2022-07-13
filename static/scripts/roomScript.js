@@ -16,11 +16,25 @@ var socket;
         }
 
         function onPlayerStateChange(event) {
-            playVideo()
+            if (event.data == YT.PlayerState.PAUSED) {
+                playVideo()
+            } else if (event.data == YT.PlayerState.ENDED) {
+                socket.emit('end');
+                socket.emit('displayPlaylist');
+                socekt.emit('displayVideo');
+            }
         }
 
         function playVideo() {
             player.playVideo();
+        }
+
+        // function unmute() {
+        //     player.unMute();
+        // }
+
+        function loadVideo(id) {
+            player.loadVideoById(id);
         }
 
         function update() {
@@ -29,18 +43,12 @@ var socket;
 
         socket.on('connect', function() {
             socket.emit('joined', {});
+            socket.emit('displayPlaylist');
         });
 
         socket.on('status', function(data) {
             $('#activityLog').val($('#activityLog').val() + '<' + data.msg + '>\n');
             $('#activityLog').scrollTop($('#activityLog')[0].scrollHeight);
-        });
-
-        socket.on('time', function(data) {
-            $('#current').append(`<option id="${Math.round(data.time)}" value="${data.time}">${data.time}</option>`);
-            $('#' + Math.round(data.time)).attr('selected', 'selected').parent().focus();
-
-            $('#' + Math.round(data.time)).parent().change();
         });
 
         socket.on('playlist', function(data) {
@@ -59,6 +67,12 @@ var socket;
             update();
         });
 
+        socket.on('time', function(data) {
+            $('#current').append(`<option id="${Math.round(data.time)}" value="${data.time}">${data.time}</option>`);
+            $('#' + Math.round(data.time)).attr('selected', 'selected').parent().focus();
+            $('#' + Math.round(data.time)).parent().change();
+        });
+
         socket.on("searchResults", function(data) {
             if (data.results === false) {
                 $('#searchResults').append('<h3>No results for "' + data.search + '".</h3>')
@@ -68,30 +82,38 @@ var socket;
             }
         });
 
+        var first = true;
         socket.on('video', function(data) {
-            var currTime = $('#current').val()
-            currTime = currTime.split(" ");
-            currTime = currTime.sort(function(a, b) {
-                return a - b;
-            });
-            player = new YT.Player('player', {
-                width: '100%',
-                videoId: data.video,
-                playerVars: {
-                    'start': Math.round(currTime[currTime.length-1]),
-                    'autoplay': 1,
-                    'mute': 1,
-                    'controls': 0,
-                    'origin': "https://www.youtube.com",
-                    'rel': 0,
-                    'showinfo': 0},
-                allow: 'autoplay',
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
+            if (first) {
+                first = false;
+                var currTime = $('#current').val()
+                player = new YT.Player('player', {
+                    width: '100%',
+                    videoId: data.video,
+                    playerVars: {
+                        'start': Math.round(currTime),
+                        'autoplay': 1,
+                        'mute': 1,
+                        'controls': 0,
+                        'origin': "https://www.youtube.com",
+                        'rel': 0,
+                        'showinfo': 0
+                    },
+                    allow: 'autoplay',
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange
+                    }
+                });
+            } else {
+                $('#activityLog').val($('#activityLog').val() + '< test passed>\n');
+                newVideo(data.video);
+            }
         });
+
+        // socket.on('unmute', function() {
+        //     unmute();
+        // });
 
         $('#text').keypress(function(e) {
            var code = e.keyCode || e.which;
@@ -100,15 +122,15 @@ var socket;
                $('#text').val('');
                socket.emit('addSong', {song: text});
                socket.emit('displayPlaylist');
-               socket.emit('displayVideo')
+               socket.emit('displayVideo');
            }
         });
 
         $('#current').change(function() {
             socket.emit('displayVideo');
         });
-
     });
+
     function leave_room() {
         socket.emit('left', {}, function() {
             socket.disconnect();
