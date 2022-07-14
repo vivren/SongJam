@@ -45,7 +45,7 @@ def joined(message):
     users += 1
     room = session.get('room')
     join_room(room)
-    emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
+    emit('status', {'msg': session.get('name') + ' has entered the room'}, room=room)
     if users != 1:
         emit('update', room=room)
 
@@ -80,19 +80,11 @@ def displayPlaylist():
 
 @socketio.on('displayVideo', namespace='/chat')
 def displayVideo():
-
-    #sceneraios that would need a new vid to be played
-    #1. first joiner. upon queing the first song
-    #2. non first joiner, upon joining the room
-    #3. any joiner, upon song ending and songs in queue
-    #4. any joiner, song ended previously and song was just queued
-
-    #scenarious not requring
-    #1. any joiner, song queued but song already playing
-
+    print("displayVideo")
     room = session.get('room')
     if not playlist.isEmpty(room):
         emit('video', {'video': playlist.getCurrentSong(room).split(",")[-1]}, room=room)
+        # emit('status', {'msg': playlist.getCurrentSong(room).rsplit(",", 1)[0] + ' is now playing'})
         # emit('unmute', room=room)
 
 
@@ -118,7 +110,7 @@ def timeUpdate(message):
 def left(message):
     room = session.get('room')
     leave_room(room)
-    emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
+    emit('status', {'msg': session.get('name') + ' has left the room'}, room=room)
 
 
 if __name__ == '__main__':

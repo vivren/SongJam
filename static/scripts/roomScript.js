@@ -5,6 +5,7 @@ var socket;
         socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
 
         var player;
+        var playerState;
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var scriptTag = document.getElementsByTagName('script')[0];
@@ -16,9 +17,11 @@ var socket;
         }
 
         function onPlayerStateChange(event) {
+            playerState = event.data;
             if (event.data == YT.PlayerState.PAUSED) {
                 playVideo()
-            } else if (event.data == YT.PlayerState.ENDED) {
+            }
+            if (event.data == YT.PlayerState.ENDED) {
                 socket.emit('end');
                 socket.emit('displayPlaylist');
                 socekt.emit('displayVideo');
@@ -32,10 +35,6 @@ var socket;
         // function unmute() {
         //     player.unMute();
         // }
-
-        function loadVideo(id) {
-            player.loadVideoById(id);
-        }
 
         function update() {
             socket.emit('timeUpdate', {time: player.getCurrentTime()});
@@ -85,6 +84,7 @@ var socket;
         var first = true;
         socket.on('video', function(data) {
             if (first) {
+                $('#activityLog').val($('#activityLog').val() + '< new >\n');
                 first = false;
                 var currTime = $('#current').val()
                 player = new YT.Player('player', {
@@ -106,8 +106,7 @@ var socket;
                     }
                 });
             } else {
-                $('#activityLog').val($('#activityLog').val() + '< test passed>\n');
-                newVideo(data.video);
+                player.loadVideoById(data.video);
             }
         });
 
@@ -122,7 +121,9 @@ var socket;
                $('#text').val('');
                socket.emit('addSong', {song: text});
                socket.emit('displayPlaylist');
-               socket.emit('displayVideo');
+               if ((playerState == YT.PlayerState.ENDED) || (typeof player == 'undefined')) {
+                   socket.emit('displayVideo');
+               }
            }
         });
 
