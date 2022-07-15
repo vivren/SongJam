@@ -24,7 +24,6 @@ var socket;
             if (event.data == YT.PlayerState.ENDED) {
                 socket.emit('end');
                 socket.emit('displayPlaylist');
-                socekt.emit('displayVideo');
             }
         }
 
@@ -51,7 +50,6 @@ var socket;
         });
 
         socket.on('playlist', function(data) {
-             $('#videos').empty();
              if (data.playlist.length == 0) {
                  $("#videos").append('<h5>Play a song using the search bar.</h5>');
              } else {
@@ -84,12 +82,11 @@ var socket;
         var first = true;
         socket.on('video', function(data) {
             if (first) {
-                $('#activityLog').val($('#activityLog').val() + '< new >\n');
                 first = false;
                 var currTime = $('#current').val()
                 player = new YT.Player('player', {
                     width: '100%',
-                    videoId: data.video,
+                    videoId: data.id,
                     playerVars: {
                         'start': Math.round(currTime),
                         'autoplay': 1,
@@ -106,7 +103,7 @@ var socket;
                     }
                 });
             } else {
-                player.loadVideoById(data.video);
+                player.loadVideoById(data.id);
             }
         });
 
