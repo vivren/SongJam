@@ -102,7 +102,7 @@ var socket;
                         'onStateChange': onPlayerStateChange
                     }
                 });
-            } else {
+            } else if (data.firstOnly == false) {
                 player.loadVideoById(data.id);
             }
         });
@@ -119,13 +119,13 @@ var socket;
                socket.emit('addSong', {song: text});
                socket.emit('displayPlaylist');
                if ((playerState == YT.PlayerState.ENDED) || (typeof player == 'undefined')) {
-                   socket.emit('displayVideo');
+                   socket.emit('displayVideo', {'firstOnly': false});
                }
            }
         });
 
         $('#current').change(function() {
-            socket.emit('displayVideo');
+            socket.emit('displayVideo', {'firstOnly': true});
         });
     });
 

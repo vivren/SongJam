@@ -79,10 +79,10 @@ def displayPlaylist():
 
 
 @socketio.on('displayVideo', namespace='/chat')
-def displayVideo():
+def displayVideo(message):
     room = session.get('room')
     if not playlist.isEmpty(room):
-        emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0]}, room=room)
+        emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0], 'firstOnly': message["firstOnly"]}, room=room)
         # emit('unmute', room=room)
 
 
@@ -97,7 +97,7 @@ def stop():
     room = session.get('room')
     playlist.getNextSong(room)
     if not playlist.isEmpty(room):
-        emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0]}, room=room)
+        emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0], 'firstOnly': False}, room=room)
 
 
 @socketio.on('timeUpdate', namespace='/chat')
