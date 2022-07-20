@@ -1,42 +1,9 @@
-#SERVER SIDE
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
 from flask_socketio import SocketIO, emit, join_room, leave_room
-from forms import LoginForm
 from classes import Playlist
 from apiclient.discovery import build
 import html
 import time
-
-socketio = SocketIO()
-app = Flask(__name__)
-app.debug = True
-app.config['SECRET_KEY'] = '1234'
-socketio.init_app(app)
-
-playlist = Playlist()
-users = 0
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['name'] = form.name.data
-        session['room'] = form.room.data
-        return redirect(url_for('.listen'))
-    elif request.method == 'GET':
-        form.name.data = session.get('name', '')
-        form.room.data = session.get('room', '')
-    return render_template('index.html', form=form)
-
-
-@app.route('/listen', methods=['GET', 'POST'])
-def listen():
-    name = session.get('name', '')
-    room = session.get('room', '')
-
-    if name == '' or room == '':
-        return redirect(url_for('.index'))
-    return render_template('room.html', name=name, room=room)
 
 
 @socketio.on('joined', namespace='/chat')
@@ -112,7 +79,3 @@ def left(message):
     room = session.get('room')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room'}, room=room)
-
-
-if __name__ == '__main__':
-    socketio.run(app)
