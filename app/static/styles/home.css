@@ -1,0 +1,25 @@
+.roomAction {
+    border: 1rem;
+    width: 90%;
+    height: 30rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.roomActionCard {
+    width: 100%;
+    height: 200%;
+    display: block;
+}
+
+.btn-dark {
+    width: 100%;
+    height: 200%;
+    display: block;
+}
+
+.label {
+    position: absolute;
+    top: 25%;
+    left: 40%;
+}
