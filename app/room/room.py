@@ -1,8 +1,11 @@
-@room.route('/listen', methods=['GET', 'POST'])
-def listen():
+from flask import session, redirect, url_for, render_template, request
+from . import roomBP
+
+@roomBP.route('/room', methods=['GET', 'POST'])
+def room():
     name = session.get('name', '')
     room = session.get('room', '')
 
     if name == '' or room == '':
-        return redirect(url_for('.index'))
-    return render_template('room.html', name=name, room=room)
+        return redirect(url_for('roomAction.createRoom'))
+    return render_template('room/room.html', name=name, room=room)
