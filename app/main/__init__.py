@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-main = Blueprint('main', __name__)
+mainBP = Blueprint('main', __name__)
 
-from . import home
+from . import main

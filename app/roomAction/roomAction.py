@@ -1,17 +1,23 @@
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
-from . import roomAction
+from . import roomActionBP
 from .forms import LoginForm
 
-@roomAction.route('/createRoom', methods=['GET', 'POST'])
-def index():
+@roomActionBP.route('/createRoom', methods=['GET', 'POST'])
+def createRoom():
     form = LoginForm()
     if form.validate_on_submit():
         session['name'] = form.name.data
         session['room'] = form.room.data
-        return redirect(url_for('.listen'))
+        return redirect(url_for('room.room'))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
         form.room.data = session.get('room', '')
-    return render_template('createRoom.html', form=form)
+    return render_template('roomAction/createRoom.html', form=form)
 
+@roomActionBP.route('/joinRoom')
+def joinRoom():
+    return render_template('roomAction/joinRoom.html')
 
+@roomActionBP.route('/browseRoom')
+def browseRoom():
+    return render_template('roomAction/browseRoom.html')

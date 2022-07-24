@@ -1,8 +1,7 @@
 // CLEINT SIDE
-
 var socket;
     $(document).ready(function(){
-        socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+        socket = io.connect('http://' + document.domain + ':' + location.port + '/room');
 
         var player;
         var playerState;
@@ -132,6 +131,6 @@ var socket;
     function leave_room() {
         socket.emit('left', {}, function() {
             socket.disconnect();
-            window.location.href = "{{ url_for('index') }}";
+            window.location.href = "{{url_for('main.main')}}";
         });
     }
