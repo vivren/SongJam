@@ -1,30 +1,35 @@
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
 from . import roomActionBP
-from .forms import LoginForm
+from .forms import CreateForm, JoinForm
+
+rooms = 0
 
 @roomActionBP.route('/createRoom', methods=['GET', 'POST'])
 def createRoom():
-    form = LoginForm()
+    form = CreateForm()
     if form.validate_on_submit():
         session['name'] = form.name.data
-        session['room'] = form.room.data
+        session[form.roomName.data] = [form.roomType.data]
+        #add room id - uuid()
         return redirect(url_for('room.room'))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
-        form.room.data = session.get('room', '')
+        form.roomName.data = session.get('roomName', '')
+        form.roomType.data = session.get('roomType', '')
     return render_template('roomAction/createRoom.html', form=form)
+
 
 @roomActionBP.route('/joinRoom')
 def joinRoom():
-    form = LoginForm()
+    form = JoinForm()
     if form.validate_on_submit():
         session['name'] = form.name.data
         session['room'] = form.room.data
         return redirect(url_for('room.room'))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
-        form.room.data = session.get('room', '')
-    return render_template('roomAction/joinRoom.html')
+        form.roomName.data = session.get('roomName', '')
+    return render_template('roomAction/joinRoom.html', form=form)
 
 @roomActionBP.route('/browseRoom')
 def browseRoom():

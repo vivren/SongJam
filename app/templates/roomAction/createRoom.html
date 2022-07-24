@@ -25,7 +25,10 @@
                                         {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
                                     </div>
                                     <div class="form-outline form-white mb-4">
-                                        {{ form.room() }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
+                                        {{ form.roomName() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>
+                                    </div>
+                                    <div class="form-outline form-white mb-4">
+                                        {{ form.roomType() }} {% for error in form.roomType.errors %}{{ error }}{% endfor %}<br>
                                     </div>
                                     {{ form.submit()}}
                                 </form>
