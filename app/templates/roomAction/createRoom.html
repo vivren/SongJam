@@ -23,19 +23,20 @@
                             <div class="card text-white bg-dark mb-3" style="width: 100%; height: 15rem;">
                                 <h2 style="padding-top: 1rem; padding-bottom: 1rem;">Create Room</h2>
                                 <form id="createRoom" method="POST">
-                                        {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
-                                        {{ form.roomName() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>
+                                    {{ form.csrf_token }}
+                                    {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+                                    {{ form.roomName() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>
                                     <div class="form-outline form-white">
                                         {% for roomType in form.roomType %}
-                                            <td>{{ roomType }}</td>
-                                            <td>{{ roomType.label }}</td>
+                                            {{ roomType }}
+                                            {{ roomType.label }}
                                         {% endfor %}
                                        {% for error in form.roomType.errors %}{{ error }}{% endfor %}<br>
                                     </div>
                                     <br>
-                                    {{ form.roomPassword() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>
+                                    {{ form.roomPassword() }} {% for error in form.roomPassword.errors %}{{ error }}{% endfor %}<br>
                                     {{ form.submit()}}
-                                </form>
+                            </form>
                             </div>
                         </div>
                     </div>
