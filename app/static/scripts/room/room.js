@@ -1,6 +1,6 @@
 // CLEINT SIDE
-var socket;
     $(document).ready(function(){
+        var socket;
         socket = io.connect('http://' + document.domain + ':' + location.port + '/room');
 
         var player;
