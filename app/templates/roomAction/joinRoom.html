@@ -21,12 +21,9 @@
                                 <h2 style="padding-top: 3rem;">Join A Room</h2>
                                 <form method="POST">
                                     {{ form.hidden_tag() }}
-<!--                                    <div class="form-outline form-white mb-4">-->
-                                        {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
-<!--                                    </div>-->
-<!--                                    <div class="form-outline form-white mb-4">-->
-                                        {{ form.roomName() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>
-<!--                                    </div>-->
+                                    {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+                                    {{ form.roomId() }} {% for error in form.roomId.errors %}{{ error }}{% endfor %}<br>
+                                    {{ form.roomPassword() }} {% for error in form.roomPassword.errors %}{{ error }}{% endfor %}<br>
                                     {{ form.submit()}}
                                 </form>
                             </div>
