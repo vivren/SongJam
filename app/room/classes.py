@@ -3,7 +3,7 @@ import json
 
 class Playlist:
     def __init__(self):
-        self.playlist = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True)
+        self.playlist = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=0)
         self.playlist.flushdb()
 
     def isEmpty(self, room):
