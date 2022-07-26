@@ -12,4 +12,5 @@ class CreateForm(FlaskForm):
 class JoinForm(FlaskForm):
     name = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Nickname', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     roomName = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Room Name', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
+    roomPassword = StringField(render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto; visibility: hidden;'})
     submit = SubmitField('Join', render_kw={'class': 'btn btn-light'})
