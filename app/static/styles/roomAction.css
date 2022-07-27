@@ -1,3 +1,8 @@
 .form-white {
     list-style: none;
 }
+
+.browseRoomCard {
+    min-height: 15rem;
+    min-width: 7rem;
+}

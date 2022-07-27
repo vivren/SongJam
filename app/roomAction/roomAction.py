@@ -15,6 +15,7 @@ def createRoom():
         roomId = shortuuid.ShortUUID().random(length=5)
         session['roomId'] = roomId
         rooms.addRoom(roomId, form.name.data, form.roomType.data, form.roomPassword.data)
+        print(form.roomType.data)
         return redirect(url_for('room.room', roomId=roomId))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
@@ -33,6 +34,7 @@ def joinRoom():
         form.name.data = session.get('name', '')
     return render_template('roomAction/joinRoom.html', form=form)
 
+
 @roomActionBP.route('/browseRoom')
 def browseRoom():
-    return render_template('roomAction/browseRoom.html')
+    return render_template('roomAction/browseRoom.html', rooms=rooms.getAll('Public Room'))
