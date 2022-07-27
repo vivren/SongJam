@@ -1,4 +1,5 @@
 import redis
+import json
 
 class Rooms:
     def __init__(self):
@@ -8,10 +9,7 @@ class Rooms:
     def addRoom(self, *args):
         if len(args) == 3:
             args.append(None)
-        self.rooms.hmset(args[0], {"id": args[1], "type": args[2], "password": args[3]})
-
-    def validatePassword(self):
-        pass
+        self.rooms.hset(args[2], args[0], str(args[1]) + ',' + str(args[3]))
 
     def getRoomId(self):
         return self.id
@@ -21,5 +19,10 @@ class Rooms:
 
     def removeRoom(self):
         pass
+
+    def getAll(self, type):
+        return self.rooms.hkeys(type)
+
+
 
 

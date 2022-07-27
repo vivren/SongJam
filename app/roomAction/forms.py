@@ -10,15 +10,16 @@ class CreateForm(FlaskForm):
     roomPassword = PasswordField(render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto; visibility: hidden;'})
     submit = SubmitField('Create', render_kw={'class': 'btn', 'style': 'background-color: rgba(76, 201, 240, 1); color: white;'})
 
-def validateRoom(roomId):
+def validateRoom(form, roomId):
     rooms = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=1)
-    if rooms.exists(roomId.data) == 0:
+    if rooms.hexists('Private Room', roomId.data) == 0:
         raise ValidationError("Room Doesn't Exist")
 
 def validatePassword(form, roomPassword):
     rooms = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=1)
-    if roomPassword.data != rooms.hget(form.roomId.data, "password"):
-        raise ValidationError('Incorrect Room Password')
+    if rooms.hget('Private Room', form.roomId.data) is not None:
+        if roomPassword.data != rooms.hget('Private Room', form.roomId.data).split(",")[1]:
+            raise ValidationError('Incorrect Room Password')
 
 class JoinForm(FlaskForm):
     name = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Nickname', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
