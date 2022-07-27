@@ -20,9 +20,9 @@ class Rooms:
     def removeRoom(self):
         pass
 
-    def getAll(self, type):
+    def getAllID(self, type):
         return self.rooms.hkeys(type)
 
-
-
-
+    def getAllName(self, type):
+        names = [room.split(',')[0] for room in self.rooms.hgetall(type).values()]
+        return names
