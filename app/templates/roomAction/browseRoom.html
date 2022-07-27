@@ -14,15 +14,17 @@
 <body class="vh-100" style="background: linear-gradient(to right, rgba(58, 13, 163, 1), rgba(76, 201, 240, 1));">
 <div class="container h-100">
     <div class="row d-flex justify-content-between align-items-center roomAction h-75">
-        {% for room in rooms %}
+        {% for i in range(ids|length) %}
         <div class="col-4">
-            <div class='card bg-dark text-white p-12 browseRoomCard'>
-                <div class="card-body text-center">
-                    <div class="mb-lg-3 mt-lg-3">
-                        <h5 class="card-title">{{ room }}</h5>
+            <a href="{{ '/room/%s'%ids[i] }}">
+                <div class='card bg-dark text-white p-12 browseRoomCard'>
+                    <div class="card-body text-center">
+                        <div class="mb-lg-3 mt-lg-3">
+                            <h5 class="card-title">Room {{ rooms[i] }}</h5>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         {% endfor %}
 <!--        <div class="col-4">-->
