@@ -10,21 +10,18 @@ class CreateForm(FlaskForm):
     roomPassword = PasswordField(render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto; visibility: hidden;'})
     submit = SubmitField('Create', render_kw={'class': 'btn', 'style': 'background-color: rgba(76, 201, 240, 1); color: white;'})
 
-def validateRoom(form, roomId):
+def validateRoom(roomId):
     rooms = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=1)
     if rooms.exists(roomId.data) == 0:
         raise ValidationError("Room Doesn't Exist")
 
-def validatePassword(form, roomId, roomPassword):
+def validatePassword(form, roomPassword):
     rooms = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=1)
-    if roomPassword.data != rooms.hget(roomId.data, "password"):
+    if roomPassword.data != rooms.hget(form.roomId.data, "password"):
         raise ValidationError('Incorrect Room Password')
-
-#https://stackoverflow.com/questions/52435660/how-to-get-data-of-another-field-in-wtform-validate
-
 
 class JoinForm(FlaskForm):
     name = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Nickname', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
-    roomId = StringField(validators=[validateRoom, DataRequired()], render_kw={'placeholder': 'Room ID', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
-    roomPassword = PasswordField(validators=[validatePassword], render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
+    roomId = StringField(validators=[DataRequired(), validateRoom], render_kw={'placeholder': 'Room ID', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
+    roomPassword = PasswordField(validators=[DataRequired(), validatePassword], render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     submit = SubmitField('Join', render_kw={'class': 'btn btn-light'})

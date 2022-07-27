@@ -14,12 +14,12 @@ def createRoom():
         session['room'] = form.roomName.data
         roomId = shortuuid.ShortUUID().random(length=5)
         session['roomId'] = roomId
-        rooms.addRoom(Room(roomId, form.name.data, form.roomType.data, form.roomPassword.data))
+        rooms.addRoom(roomId, form.name.data, form.roomType.data, form.roomPassword.data)
         return redirect(url_for('room.room', roomId=roomId))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
         form.roomName.data = session.get('room', '')
-        return render_template('roomAction/createRoom.html', form=form)
+    return render_template('roomAction/createRoom.html', form=form)
 
 
 @roomActionBP.route('/joinRoom', methods=['GET', 'POST'])
@@ -28,11 +28,10 @@ def joinRoom():
     if form.validate_on_submit():
         session['name'] = form.name.data
         session['roomId'] = form.roomId.data
-        return redirect(url_for('room.room', roomId=roomId))
+        return redirect(url_for('room.room', roomId=form.roomId.data))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
-        form.roomId.data = session.get('roomId', '')
-        return render_template('roomAction/joinRoom.html', form=form)
+    return render_template('roomAction/joinRoom.html', form=form)
 
 @roomActionBP.route('/browseRoom')
 def browseRoom():
