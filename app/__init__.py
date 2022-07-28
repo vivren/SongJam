@@ -18,6 +18,9 @@ def createApp():
     from .roomAction import roomActionBP
     app.register_blueprint(roomActionBP)
 
+    from .error import errorBP
+    app.register_blueprint(errorBP)
+
     return app
 
 
