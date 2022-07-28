@@ -9,17 +9,16 @@
             integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/roomAction.css')}}">
-    <title>SongJam</title>
+    <title>SongJam | Browse Room</title>
 </head>
-<body class="vh-100" style="background: linear-gradient(to right, rgba(58, 13, 163, 1), rgba(76, 201, 240, 1));">
-<div class="container h-100">
-    <div class="row d-flex justify-content-between align-items-center roomAction h-75">
+<body>
+<div class="container">
+    <div class="row roomAction">
         {% for i in range(rooms|length) %}
         <div class="col-4">
             <a href="{{ '/room?roomId=%s'%ids[i] }}">
-                <div class='card bg-dark text-white p-12 mt-5 browseRoomCard'>
+                <div class='card bg-dark text-white pt-12 mt-5 browseRoomCard'>
                     <div class="card-body text-center">
-                        <div class="mb-5 mt-5">
                             <h5 class="card-title">Room {{ rooms[i] }}</h5>
                             <p class="card-text">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
@@ -35,7 +34,6 @@
                                 </svg>
                             Taylor Swift</p>
                         </div>
-                    </div>
                 </div>
             </a>
         </div>

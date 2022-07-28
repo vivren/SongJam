@@ -1,9 +1,10 @@
+body {
+    background: linear-gradient(to right, rgba(58, 13, 163, 1), rgba(76, 201, 240, 1));
+}
+
 .roomAction {
-    border: 1rem;
-    width: 90%;
+    width: 100%;
     height: 30rem;
-    overflow: hidden;
-    white-space: nowrap;
 }
 
 .btn-dark {
@@ -12,11 +13,10 @@
     display: block;
 }
 
-
 .roomActionCard {
     min-height: 20rem;
-    min-width: 15rem;
-    max-width: 15rem;
+    min-width: 10rem;
+    max-width: 20rem;
     position: relative;
     height: auto;
     overflow: hidden;
