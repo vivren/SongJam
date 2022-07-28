@@ -2,7 +2,6 @@ from flask import session, redirect, url_for, render_template, request
 from . import roomBP
 
 @roomBP.route('/room', methods=['GET', 'POST'])
-
 def room():
     name = session.get('name', '')
     roomName = session.get('room', '')
