@@ -8,7 +8,7 @@ class CreateForm(FlaskForm):
     roomName = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Room Name', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     roomType = RadioField(validators=[InputRequired()], choices=['Public Room', 'Private Room'], default='Public Room', render_kw={'style': 'margin: auto;'})
     roomPassword = PasswordField(render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto; visibility: hidden;'})
-    submit = SubmitField('Create', render_kw={'class': 'btn', 'style': 'background-color: rgba(76, 201, 240, 1); color: white;'})
+    submit = SubmitField('Create', render_kw={'class': 'btn'})
 
 def validateRoom(form, roomId):
     rooms = redis.StrictRedis('localhost', 6379, charset="utf-8", decode_responses=True, db=1)
@@ -25,4 +25,4 @@ class JoinForm(FlaskForm):
     name = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Nickname', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     roomId = StringField(validators=[DataRequired(), validateRoom], render_kw={'placeholder': 'Room ID', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     roomPassword = PasswordField(validators=[DataRequired(), validatePassword], render_kw={'placeholder': 'Room Password', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
-    submit = SubmitField('Join', render_kw={'class': 'btn btn-light'})
+    submit = SubmitField('Join', render_kw={'class': 'btn'})
