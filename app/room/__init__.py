@@ -2,4 +2,4 @@ from flask import Blueprint
 
 roomBP = Blueprint('room', __name__)
 
-from . import room
+from . import room, events
