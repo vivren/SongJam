@@ -5,4 +5,68 @@
 .browseRoomCard {
     min-height: 15rem;
     min-width: 7rem;
+    max-width: 20rem;
+    position: relative;
+    height: auto;
+    overflow: hidden;
+    border-radius: 15px;
+    margin: 0 auto;
+    box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+    transition: .5s;
+}
+
+.browseRoomCard:hover {
+  transform:scale(1.1);
+}
+
+.browseRoomCard:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  z-index: 1;
+  transform: skewY(-5deg) scale(1.5);
+}
+
+.browseRoomCard a {
+  display: block;
+  position: relative;
+  z-index: 2;
+  width: 150px;
+  height: 40px;
+  text-align: center;
+  margin: 20px auto 0;
+  line-height: 40px;
+  border-radius: 40px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0,0,0, .1);
+}
+.browseRoomCard a:hover {
+
+}
+
+.roomActionTitle {
+    padding: 1rem 1rem;
+}
+
+.cardForm {
+    max-height: 27rem;
+}
+
+.btn {
+  color: rgba(76, 201, 240, 1);
+  border: 2px solid rgba(76, 201, 240, 1);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 0 rgba(76, 201, 240, 1);
+  -webkit-transition: ease-out 0.4s;
+  -moz-transition: ease-out 0.4s;
+  transition: ease-out 0.4s;
+}
+
+.btn:hover {
+  box-shadow: inset 400px 0 0 0 rgba(76, 201, 240, 1);
+  border: 2px solid rgba(76, 201, 240, 1);
+  color: white;
 }
