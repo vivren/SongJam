@@ -2,13 +2,19 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='error/roomAction.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/error.css')}}">
     <title>SongJam | No Rooms Found</title>
 </head>
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row justify-content-center align-items-center">
-            <img class src="{{url_for('static', filename='images/maze.png')}}"/>
+            <div class="col-8">
+                <img src="{{url_for('static', filename='images/maze.png')}}"/>
+            </div>
+            <div class="errorMessage">
+                <h3>No existing public rooms</h3>
+                <a href="createRoom"><h6>Create the first room!</h6></a>
+            </div>
         </div>
     </div>
 </body>

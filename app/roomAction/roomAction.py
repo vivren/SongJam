@@ -38,4 +38,8 @@ def joinRoom():
 
 @roomActionBP.route('/browseRoom')
 def browseRoom():
-    return render_template('roomAction/browseRoom.html', ids=rooms.getAllID('Public Room'), rooms=rooms.getAllName('Public Room'))
+    ids = rooms.getAllID('Public Room')
+    names = rooms.getAllName('Public Room')
+    if len(ids) == 0 or len(names) == 0:
+        return render_template('error/noRoom.html')
+    return render_template('roomAction/browseRoom.html', ids=ids, rooms=rooms)

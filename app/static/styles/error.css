@@ -3,13 +3,17 @@ body {
     padding: 2rem;
 }
 
-.container {
-    width: 100%;
-    height: 20rem;
+img {
+    padding-top: 9rem;
+    opacity: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+a {
+    color: #a8a8a8;
 }
 
-img {
-    display: block;
-    width: auto;
-    height: auto;
+.errorMessage {
+      text-align: center;
 }
