@@ -1,7 +1,15 @@
+body {
+    background: linear-gradient(to right, rgba(58, 13, 163, 1), rgba(76, 201, 240, 1));
+    padding: 2rem;
+}
+
 .form-white {
     list-style: none;
 }
 
+.card-title {
+    padding-top: 3rem;
+}
 .browseRoomCard {
     min-height: 15rem;
     min-width: 7rem;
@@ -30,11 +38,14 @@
 }
 
 .roomActionTitle {
-    padding: 1rem 1rem;
+    padding-top: 3rem;
+    padding-bottom: 1rem;
 }
 
 .cardForm {
-    max-height: 27rem;
+    min-height: 30rem;
+    max-width: 30rem;
+    border-radius: 2rem;
 }
 
 .btn {
