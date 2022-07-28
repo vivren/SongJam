@@ -21,7 +21,7 @@
                     <div class="card-body p-5 text-center">
                         <div class="mb-md-5 mt-md-4">
                                 <h3 class="roomActionTitle">Create Room</h3>
-                                <form method="POST">
+                                <form id="createRoom" method="POST">
                                     {{ form.csrf_token }}
                                     {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
                                     {{ form.roomName() }} {% for error in form.roomName.errors %}{{ error }}{% endfor %}<br>

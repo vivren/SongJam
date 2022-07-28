@@ -16,7 +16,7 @@
     <div class="row d-flex justify-content-between align-items-center roomAction h-75">
         {% for i in range(rooms|length) %}
         <div class="col-4">
-            <a href="{{ '/room/%s'%ids[i] }}">
+            <a href="{{ '/room?roomId=%s'%ids[i] }}">
                 <div class='card bg-dark text-white p-12 mt-5 browseRoomCard'>
                     <div class="card-body text-center">
                         <div class="mb-5 mt-5">
@@ -43,4 +43,4 @@
     </div>
 </div>
 </body>
-</html
+</html>

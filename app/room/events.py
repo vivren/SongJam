@@ -3,11 +3,10 @@ from flask_socketio import emit, join_room, leave_room, SocketIO
 from apiclient.discovery import build
 import html
 from .classes import Playlist
-# from .. import socketio
+from .. import socketio
 
 playlist = Playlist()
 users = 0
-socketio = SocketIO()
 
 @socketio.on('joined', namespace='/room')
 def joined(message):

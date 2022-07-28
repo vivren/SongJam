@@ -16,6 +16,7 @@ def createRoom():
         session['roomId'] = roomId
         rooms.addRoom(roomId, form.name.data, form.roomType.data, form.roomPassword.data)
         return redirect(url_for('room.room', roomId=roomId))
+
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
         form.roomName.data = session.get('room', '')
@@ -29,6 +30,7 @@ def joinRoom():
         session['name'] = form.name.data
         session['roomId'] = form.roomId.data
         return redirect(url_for('room.room', roomId=form.roomId.data))
+
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
     return render_template('roomAction/joinRoom.html', form=form)
