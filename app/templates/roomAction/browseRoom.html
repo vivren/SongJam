@@ -13,8 +13,7 @@
     <div class="row roomAction">
         {% for i in range(rooms|length) %}
         <div class="col-4">
-            <a href="{{ '/room?roomId=%s'%ids[i] }}">
-                <div class='card bg-dark text-white pt-12 mt-5 browseRoomCard'>
+            <a href="{{ '/joinPublicRoom?roomId=%s'%ids[i] }}">                <div class='card bg-dark text-white pt-12 mt-5 browseRoomCard'>
                     <div class="card-body text-center">
                             <h5 class="card-title">Room {{ rooms[i] }}</h5>
                             <p class="card-text">
@@ -36,6 +35,6 @@
         </div>
         {% endfor %}
     </div>
-</div>
+    </div>
 </body>
 </html>
