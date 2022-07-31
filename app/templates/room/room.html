@@ -16,9 +16,12 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-8">
-                    <h1>Room {{ roomName }}</h1>
-                    <a href="#" onclick="leave_room();">Leave room</a>
                     <div id="player"></div>
+                    <div class="row">
+                        <h1>Room {{ roomName }}</h1>
+                        <a href="#" onclick="leave_room();">Leave room</a>
+                        <h6 id="numConnected">1 Connected</h6>
+                    </div>
                     <select hidden id="current">
                         <option value="0">0</option>
                     </select>

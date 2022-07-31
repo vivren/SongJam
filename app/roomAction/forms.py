@@ -28,5 +28,5 @@ class JoinPrivateForm(FlaskForm):
 
 class JoinPublicForm(FlaskForm):
     name = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Nickname', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
-    roomId = StringField(validators=[DataRequired()], render_kw={'placeholder': 'Room ID', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
+    roomId = StringField(render_kw={'placeholder': 'Room ID', 'class': 'form-control', 'style': 'width: 75%; margin: auto;'})
     submit = SubmitField('Join', render_kw={'class': 'btn'})
