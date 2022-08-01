@@ -10,12 +10,12 @@ playlist = Playlist()
 
 @socketio.on('joined', namespace='/room')
 def joined(message):
-    rooms.newConnection(message['id'])
-    room = session.get('room')
+    room = session.get('roomId')
+    rooms.newConnection(room)
     join_room(room)
-    emit('newConnection', {'users': rooms.getNumUsersConnected(message['id'])}, room=room)
+    emit('newConnection', {'users': rooms.getNumUsersConnected(room)}, room=room)
     emit('status', {'msg': session.get('name') + ' has entered the room'}, room=room)
-    if rooms.getNumUsersConnected(message['id']) != 1:
+    if rooms.getNumUsersConnected(room) != 1:
         emit('update', room=room)
 
 
@@ -31,7 +31,7 @@ def song(message):
     )
 
     response = search.execute()
-    room = session.get('room')
+    room = session.get('roomId')
 
     if len(response["items"]) == 0:
         emit("searchResults", {"results": False, "search": message["song"]}, room=room)
@@ -43,13 +43,13 @@ def song(message):
 
 @socketio.on('displayPlaylist', namespace='/room')
 def displayPlaylist():
-    room = session.get('room')
+    room = session.get('roomId')
     emit('playlist', {'playlist': playlist.getPlaylist(room)}, room=room)
 
 
 @socketio.on('displayVideo', namespace='/room')
 def displayVideo(message):
-    room = session.get('room')
+    room = session.get('roomId')
     if not playlist.isEmpty(room):
         emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0], 'firstOnly': message["firstOnly"]}, room=room)
         # emit('unmute', room=room)
@@ -57,13 +57,13 @@ def displayVideo(message):
 
 @socketio.on('pause', namespace='/room')
 def pause():
-    room = session.get('room')
+    room = session.get('roomId')
     emit('pauseVideo', room=room)
 
 
 @socketio.on('end', namespace='/room')
 def stop():
-    room = session.get('room')
+    room = session.get('roomId')
     playlist.getNextSong(room)
     if not playlist.isEmpty(room):
         emit('video', {'id': playlist.getCurrentSong(room).split(",")[-1], 'video': playlist.getCurrentSong(room).rsplit(",", 1)[0], 'firstOnly': False}, room=room)
@@ -71,13 +71,13 @@ def stop():
 
 @socketio.on('timeUpdate', namespace='/room')
 def timeUpdate(message):
-    room = session.get('room')
+    room = session.get('roomId')
     if not playlist.isEmpty(room):
         emit('time', {'time': message["time"]}, room=room)
 
 
 @socketio.on('left', namespace='/room')
 def left(message):
-    room = session.get('room')
+    room = session.get('roomId')
     leave_room(room)
     emit('status', {'msg': session.get('name') + ' has left the room'}, room=room)

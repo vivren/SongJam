@@ -63,3 +63,17 @@ body {
   border: 2px solid rgba(76, 201, 240, 1);
   color: white;
 }
+
+h3 {
+    color: rgb(141, 227, 255);
+
+}
+
+p {
+    text-align: left;
+    padding-left: 1rem;
+}
+
+svg {
+    color: rgb(163, 129, 255);
+}

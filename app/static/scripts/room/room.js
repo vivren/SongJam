@@ -42,7 +42,7 @@ $(document).ready(function () {
     }
 
     socket.on('connect', function () {
-        socket.emit('joined', {"id": id});
+        socket.emit('joined', {});
         socket.emit('displayPlaylist');
     });
 
