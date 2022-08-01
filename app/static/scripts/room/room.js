@@ -1,8 +1,8 @@
 var socket;
 var roomId = window.location.href.split("/")[2]
+var player;
 
 $(document).ready(function () {
-    var socket;
     socket = io.connect(window.location.href);
 
     var id = window.location.href.split("=")[1];
@@ -114,9 +114,6 @@ $(document).ready(function () {
         }
     });
 
-    // socket.on('unmute', function() {
-    //     unmute();
-    // });
 
     $('#text').keypress(function (e) {
         var code = e.keyCode || e.which;

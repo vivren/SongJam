@@ -17,13 +17,6 @@ class Playlist:
             return None
         return self.playlist.lindex(room, 0)
 
-    # def updateCurrentSongTime(self, room, time):
-    #     if self.isEmpty(room):
-    #         return None
-    #     if float(self.playlist.lindex(room, 0).split(",")[2]) < time:
-    #         new = self.playlist.lindex(room, 0).split(",")[0] + ',' + self.playlist.lindex(room, 0).split(",")[1] + ',' + str(time)
-    #         self.playlist.lset(room, 0, new)
-
     def getNextSong(self, room):
         if self.isEmpty(room):
             return None
@@ -33,5 +26,5 @@ class Playlist:
         return self.playlist.lrange(room, 0, -1)
 
     def getCurrentSongs(self, rooms):
-        songs = [self.getCurrentSong(room) for room in rooms]
+        songs = [self.getCurrentSong(room).split(",")[0] for room in rooms]
         return ['No Current Song Playing' if song is None else song for song in songs]
