@@ -5,8 +5,7 @@ import html
 from .classes import Playlist
 from ..roomAction import rooms
 from .. import socketio
-
-playlist = Playlist()
+from . import playlist
 
 @socketio.on('joined', namespace='/room')
 def joined(message):

@@ -31,3 +31,7 @@ class Playlist:
 
     def getPlaylist(self, room):
         return self.playlist.lrange(room, 0, -1)
+
+    def getCurrentSongs(self, rooms):
+        songs = [self.getCurrentSong(room) for room in rooms]
+        return ['No Current Song Playing' if song is None else song for song in songs]
