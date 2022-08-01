@@ -46,6 +46,7 @@ def joinPublicRoom():
 def browseRoom():
     ids = rooms.getAllID('Public Room')
     names = rooms.getAllName('Public Room')
+    numConnected = rooms.getAllUser('Public Room')
     if len(ids) == 0 or len(names) == 0:
         return render_template('error/noRoom.html')
-    return render_template('roomAction/browseRoom.html', ids=ids, rooms=names)
+    return render_template('roomAction/browseRoom.html', ids=ids, rooms=names, users=numConnected)
