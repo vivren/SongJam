@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, session, redirect, url_for, render_template, request
 from . import roomActionBP, rooms
 from .forms import CreateForm, JoinPrivateForm, JoinPublicForm
+from ..room import playlist
 import shortuuid
 
 @roomActionBP.route('/createRoom', methods=['GET', 'POST'])
@@ -49,4 +50,4 @@ def browseRoom():
     numConnected = rooms.getAllUser('Public Room')
     if len(ids) == 0 or len(names) == 0:
         return render_template('error/noRoom.html')
-    return render_template('roomAction/browseRoom.html', ids=ids, rooms=names, users=numConnected)
+    return render_template('roomAction/browseRoom.html', ids=ids, rooms=names, users=numConnected, songs=playlist.getCurrentSongs(ids))
