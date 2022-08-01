@@ -17,7 +17,7 @@
                 <div class="card bg-dark text-white cardForm">
                     <div class="card-body p-5 text-center">
                                 <h3 class="roomActionTitle">Join Room</h3>
-                                <form method="POST">
+                                <form id="joinRoom" method="POST">
                                     {{ form.csrf_token }}
                                     {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
                                     {{ form.roomId() }} {% for error in form.roomId.errors %}{{ error }}{% endfor %}<br>

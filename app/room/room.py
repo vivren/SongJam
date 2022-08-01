@@ -5,8 +5,7 @@ from . import roomBP
 def room():
     name = session.get('name', '')
     roomName = session.get('room', '')
-    roomId = session.get('roomId', '')
 
-    if name == '' or roomName == '' or roomId == '':
+    if name == '' or roomName == '':
         return redirect(url_for('roomAction.createRoom'))
     return render_template('room/room.html', name=name, roomName=roomName)

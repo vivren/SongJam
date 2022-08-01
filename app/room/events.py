@@ -3,19 +3,19 @@ from flask_socketio import emit, join_room, leave_room, SocketIO
 from apiclient.discovery import build
 import html
 from .classes import Playlist
+from ..roomAction import rooms
 from .. import socketio
 
 playlist = Playlist()
-users = 0
 
 @socketio.on('joined', namespace='/room')
 def joined(message):
-    global users
-    users += 1
+    rooms.newConnection(message['id'])
     room = session.get('room')
     join_room(room)
+    emit('newConnection', {'users': rooms.getNumUsersConnected(message['id'])}, room=room)
     emit('status', {'msg': session.get('name') + ' has entered the room'}, room=room)
-    if users != 1:
+    if rooms.getNumUsersConnected(message['id']) != 1:
         emit('update', room=room)
 
 

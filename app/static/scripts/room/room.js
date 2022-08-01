@@ -4,6 +4,8 @@ var roomId = window.location.href.split("/")[2]
 $(document).ready(function () {
     var socket;
     socket = io.connect(window.location.href);
+
+    var id = window.location.href.split("=")[1];
     var player;
     var playerState;
     var tag = document.createElement('script');
@@ -40,8 +42,12 @@ $(document).ready(function () {
     }
 
     socket.on('connect', function () {
-        socket.emit('joined', {});
+        socket.emit('joined', {"id": id});
         socket.emit('displayPlaylist');
+    });
+
+    socket.on('newConnection', function (data) {
+        $('#numConnected').text(data.users + ' Connected');
     });
 
     socket.on('status', function (data) {
@@ -51,6 +57,7 @@ $(document).ready(function () {
 
     socket.on('playlist', function (data) {
         if (data.playlist.length == 0) {
+            $("#videos").empty();
             $("#videos").append('<h5>Play a song using the search bar.</h5>');
         } else {
             $("#videos").empty();
